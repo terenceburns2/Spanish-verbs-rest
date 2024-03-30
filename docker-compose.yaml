@@ -1,0 +1,39 @@
+services:
+  api:
+    build: ./spanish-verbs
+    ports:
+      - '8080:8080'
+    container_name: api_c
+    networks:
+      - spanish-verbs-net
+    volumes:
+      - ./spanish-verbs:/app
+
+  db:
+    build: ./db
+    ports:
+      - '5432:5432'
+    container_name: db_c
+    networks:
+      - spanish-verbs-net
+    volumes:
+      - psql_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: terenceburns
+      POSTGRES_PASSWORD: mysecretpassword
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   ports:
+  #     - '80:80'
+  #   environment:
+  #     PGADMIN_DEFAULT_PASSWORD: password
+  #     PGADMIN_DEFAULT_EMAIL: terenceburns2@outlook.com
+  #   networks:
+  #     - spanish-verbs-net
+
+networks:
+  spanish-verbs-net:
+
+
+volumes:
+  psql_data:

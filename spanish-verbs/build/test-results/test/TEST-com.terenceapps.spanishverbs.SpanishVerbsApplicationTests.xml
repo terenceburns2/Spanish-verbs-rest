@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.terenceapps.spanishverbs.SpanishVerbsApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-01-16T12:04:39" hostname="Terences-MacBook-Pro.local" time="0.429">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.terenceapps.spanishverbs.SpanishVerbsApplicationTests" time="0.429"/>
+  <system-out><![CDATA[12:04:38.527 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.terenceapps.spanishverbs.SpanishVerbsApplicationTests]: SpanishVerbsApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+12:04:38.567 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.terenceapps.spanishverbs.SpanishVerbsApplication for test class com.terenceapps.spanishverbs.SpanishVerbsApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.1)
+
+2024-01-16T12:04:38.714Z  INFO 26209 --- [    Test worker] c.t.s.SpanishVerbsApplicationTests       : Starting SpanishVerbsApplicationTests using Java 21.0.1 with PID 26209 (started by terenceburns in /Users/terenceburns/Documents/Projects/spanish-verbs-fullstack/spanish-verbs)
+2024-01-16T12:04:38.715Z  INFO 26209 --- [    Test worker] c.t.s.SpanishVerbsApplicationTests       : No active profile set, falling back to 1 default profile: "default"
+2024-01-16T12:04:39.271Z  INFO 26209 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7fdd43cd, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3a38f122, org.springframework.security.web.context.SecurityContextHolderFilter@5c059a68, org.springframework.security.web.header.HeaderWriterFilter@2233cac0, org.springframework.security.web.authentication.logout.LogoutFilter@3bb9ca38, com.terenceapps.spanishverbs.config.JwtTokenFilter@2ce03e86, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3f9b7fe1, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2f79f192, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1c628f6a, org.springframework.security.web.session.SessionManagementFilter@6e02721d, org.springframework.security.web.access.ExceptionTranslationFilter@d325518, org.springframework.security.web.access.intercept.AuthorizationFilter@388c519]
+2024-01-16T12:04:39.390Z  INFO 26209 --- [    Test worker] c.t.s.SpanishVerbsApplicationTests       : Started SpanishVerbsApplicationTests in 0.765 seconds (process running for 1.244)
+]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/terenceburns/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.10/90ed94ac044ea8953b224304c762316e91fd6b31/byte-buddy-agent-1.14.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
