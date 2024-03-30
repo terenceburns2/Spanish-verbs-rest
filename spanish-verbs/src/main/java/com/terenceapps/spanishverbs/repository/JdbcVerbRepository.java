@@ -3,9 +3,11 @@ package com.terenceapps.spanishverbs.repository;
 import com.terenceapps.spanishverbs.model.Verb;
 import com.terenceapps.spanishverbs.model.VerbConjugated;
 import com.terenceapps.spanishverbs.repository.util.RowMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +17,6 @@ import java.util.logging.Logger;
 public class JdbcVerbRepository implements VerbRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Logger logger = Logger.getLogger(JdbcVerbRepository.class.getName());
-
 
     public JdbcVerbRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -25,24 +25,14 @@ public class JdbcVerbRepository implements VerbRepository {
     @Override
     public void save(String infinitive, String mood, String tense, BigDecimal userId) {
         String sql = "INSERT INTO saved (infinitive, mood, tense, userid) VALUES (?, ?, ?, ?)";
-
-        try {
-            jdbcTemplate.update(sql, infinitive, mood, tense, userId);
-        } catch (Exception e) {
-            logger.info("Failed to save verb: " + e);
-        }
+        jdbcTemplate.update(sql, infinitive, mood, tense, userId);
     }
 
 
     @Override
     public void unsave(String infinitive, String mood, String tense, BigDecimal userId) {
         String sql = "DELETE FROM saved WHERE infinitive=? AND mood=? AND tense=? AND userid=?";
-        try {
-            jdbcTemplate.update(sql, infinitive, mood, tense, userId);
-        } catch (Exception e) {
-            logger.info("Failed to delete verb: " + e);
-        }
-
+        jdbcTemplate.update(sql, infinitive, mood, tense, userId);
     }
 
 
@@ -51,8 +41,8 @@ public class JdbcVerbRepository implements VerbRepository {
         String sql = "SELECT * FROM saved WHERE userid=?";
 
         List<Verb> resultSet = jdbcTemplate.query(sql,
-                (row, index) -> new Verb(row.getString("infinitive"), row.getString("mood"), row.getString("tense")), userId);
-        return Optional.of(resultSet);
+                    (row, index) -> new Verb(row.getString("infinitive"), row.getString("mood"), row.getString("tense")), userId);
+            return Optional.of(resultSet);
     }
 
 
@@ -61,6 +51,10 @@ public class JdbcVerbRepository implements VerbRepository {
         String sql = "SELECT * FROM verbs WHERE infinitive=? AND mood=? AND tense=?";
 
         List<VerbConjugated> verbConjugated = jdbcTemplate.query(sql, new RowMapper(), infinitive, mood, tense);
+
+        if (verbConjugated.isEmpty()) {
+            return Optional.empty();
+        }
 
         return Optional.of(verbConjugated.get(0));
     }

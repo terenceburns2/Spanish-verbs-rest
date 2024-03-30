@@ -1,8 +1,14 @@
 package com.terenceapps.spanishverbs.model;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Verb {
+
+    @NotBlank(message = "The infinitive is required.")
     private String infinitive;
+    @NotBlank(message = "The mood is required.")
     private String mood;
+    @NotBlank(message = "The tense is required.")
     private String tense;
 
     @Override

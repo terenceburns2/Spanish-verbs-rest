@@ -5,10 +5,13 @@ import com.terenceapps.spanishverbs.model.Verb;
 import com.terenceapps.spanishverbs.model.VerbConjugated;
 import com.terenceapps.spanishverbs.service.UserService;
 import com.terenceapps.spanishverbs.service.VerbService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,11 +21,10 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
+@Validated
 public class VerbController {
 
     private final VerbService verbService;
-
-    private Logger logger = Logger.getLogger(VerbController.class.getName());
 
     public VerbController(VerbService verbService, UserService userService) {
         this.verbService = verbService;
@@ -33,21 +35,22 @@ public class VerbController {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
         Optional<VerbConjugated> verb = verbService.getNonSavedConjugatedVerb(userId);
 
-        if (verb.isPresent()) {
-            return new ResponseEntity<>(verb.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return verb.map(verbConjugated -> new ResponseEntity<>(verbConjugated, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody Verb verbDto, Authentication authentication) {
+    public ResponseEntity<String> save(@Valid @RequestBody Verb verb, Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
-        verbService.save(verbDto, userId);
+        verbService.save(verb, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/conjugated-verb")
-    public ResponseEntity<VerbConjugated> getConjugatedVerb(@RequestParam String infinitive, @RequestParam String mood, @RequestParam String tense) {
+    public ResponseEntity<VerbConjugated> getConjugatedVerb(
+            @NotBlank(message = "The infinitive is required.") @RequestParam String infinitive,
+            @NotBlank(message = "The mood is required.") @RequestParam String mood,
+            @NotBlank(message = "The tense is required.") @RequestParam String tense) {
         Optional<VerbConjugated> verb = verbService.getConjugatedVerb(infinitive, mood, tense);
 
         return verb.map(verbConjugated -> new ResponseEntity<>(verbConjugated, HttpStatus.OK))
