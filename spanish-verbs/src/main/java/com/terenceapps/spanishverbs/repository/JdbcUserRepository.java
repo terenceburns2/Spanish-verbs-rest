@@ -1,10 +1,8 @@
 package com.terenceapps.spanishverbs.repository;
 
 import com.terenceapps.spanishverbs.model.User;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

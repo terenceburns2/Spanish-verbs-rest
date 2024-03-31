@@ -3,15 +3,13 @@ package com.terenceapps.spanishverbs.repository;
 import com.terenceapps.spanishverbs.model.Verb;
 import com.terenceapps.spanishverbs.model.VerbConjugated;
 import com.terenceapps.spanishverbs.repository.util.RowMapper;
-import org.springframework.dao.DataAccessException;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Repository
 public class JdbcVerbRepository implements VerbRepository {

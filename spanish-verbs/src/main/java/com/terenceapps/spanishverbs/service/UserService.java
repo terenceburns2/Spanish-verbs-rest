@@ -3,6 +3,7 @@ package com.terenceapps.spanishverbs.service;
 import com.terenceapps.spanishverbs.exception.EmailExistsException;
 import com.terenceapps.spanishverbs.model.User;
 import com.terenceapps.spanishverbs.repository.JdbcUserRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +27,8 @@ public class UserService implements UserDetailsService {
     public BigDecimal getUserIdFromEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
 
+        // We never reach this stage as failed authentication should be
+        // caught further up, but as added safety, we'll keep this in.
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User email cannot be found.");
         }

@@ -17,6 +17,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
+    @ExceptionHandler(InvalidAccessTokenException.class)
+    public ResponseEntity<ErrorDetails> exceptionInvalidAccessTokenHandler(InvalidAccessTokenException e) {
+        ErrorDetails errorDetails = new ErrorDetails(e.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, List<String>>> exceptionRequestParamNotValidHandler(ConstraintViolationException e) {
         List<String> errors = new ArrayList<>();
@@ -44,12 +50,18 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorDetails> exceptionDataAccessHandler() {
         ErrorDetails errorDetails = new ErrorDetails("Failed to process request.");
-        return ResponseEntity.internalServerError().body(errorDetails);
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(EmailExistsException.class)
+    public ResponseEntity<ErrorDetails> exceptionAccountExitsHandler() {
+        ErrorDetails errorDetails = new ErrorDetails("This email already exists. Try signing in.");
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmailDoesNotExistException.class)
     public ResponseEntity<ErrorDetails> exceptionAccountDoesNotExistHandler() {
         ErrorDetails errorDetails = new ErrorDetails("Email does not exist.");
-        return ResponseEntity.badRequest().body(errorDetails);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 }

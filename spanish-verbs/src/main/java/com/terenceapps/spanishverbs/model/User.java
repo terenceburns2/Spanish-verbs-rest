@@ -1,5 +1,7 @@
 package com.terenceapps.spanishverbs.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,12 +10,20 @@ import java.util.Collection;
 
 public class User implements UserDetails {
 
+    public interface Signin {}
+    public interface Register {}
+
     private BigDecimal id;
+    @NotBlank(message = "Email is required.")
     private String email;
+
+    @NotBlank(message = "Password is required.", groups = { Signin.class, Register.class })
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!*()]).{8,}$",
+            message = "Password must be 8 characters long and a combination of uppercase letters, " +
+                    "lowercase letters, numbers and special characters.", groups = { Register.class })
     private String password;
 
-    public User() {
-    }
+    public User() {}
 
     public User(BigDecimal id, String email, String password) {
         this.id = id;
@@ -37,13 +47,17 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override
@@ -71,7 +85,4 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

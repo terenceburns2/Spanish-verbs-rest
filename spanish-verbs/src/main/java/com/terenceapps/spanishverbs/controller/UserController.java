@@ -1,21 +1,16 @@
 package com.terenceapps.spanishverbs.controller;
 
 import com.terenceapps.spanishverbs.config.JwtTokenUtil;
-import com.terenceapps.spanishverbs.exception.EmailExistsException;
-import com.terenceapps.spanishverbs.model.ErrorDetails;
 import com.terenceapps.spanishverbs.model.User;
 import com.terenceapps.spanishverbs.service.UserService;
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
-import java.util.logging.Logger;
 
 @RestController
 public class UserController {
@@ -37,11 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signin(@RequestBody User user) {
-        if (user.getPassword().isEmpty() || user.getEmail().isEmpty()) {
-            throw new BadCredentialsException("Both email and password must be provided.");
-        }
-
+    public ResponseEntity<String> signin(@Validated(User.Signin.class) @RequestBody User user) {
         authManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -56,28 +47,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Boolean> register(@RequestBody User user) {
-        if (user.getPassword().isEmpty() || user.getEmail().isEmpty()) {
-            throw new BadCredentialsException("Both email and password must be provided.");
-        }
-
+    public ResponseEntity<Boolean> register(@Validated(User.Register.class) @RequestBody User user) {
         userService.registerUser(user);
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * Localised exception handling
-     */
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({EmailExistsException.class})
-    public ErrorDetails registerConflict(Exception e) {
-        return new ErrorDetails(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
-    public ErrorDetails authConflict(Exception e) {
-        return new ErrorDetails(e.getMessage());
     }
 }
