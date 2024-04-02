@@ -7,7 +7,6 @@ import com.terenceapps.spanishverbs.service.UserService;
 import com.terenceapps.spanishverbs.service.VerbService;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,15 +41,15 @@ public class VerbController {
     }
 
     @PostMapping("/verbs")
-    public ResponseEntity<String> save(@Valid @RequestBody Verb verb, Authentication authentication) {
+    public ResponseEntity<String> saveVerb(@Valid @RequestBody Verb verb, Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
-        verbService.save(verb, userId);
+        verbService.saveVerb(verb, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/verbs/conjugated")
-    public ResponseEntity<VerbConjugated> getConjugatedVerb(@Valid @RequestBody Verb verb) {
-        Optional<VerbConjugated> conjugatedVerb = verbService.getConjugatedVerb(verb);
+    public ResponseEntity<VerbConjugated> getConjugationsOfVerb(@Valid @RequestBody Verb verb) {
+        Optional<VerbConjugated> conjugatedVerb = verbService.getConjugationsOfVerb(verb);
 
         return conjugatedVerb.map(verbConjugated -> new ResponseEntity<>(verbConjugated, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
@@ -58,7 +57,7 @@ public class VerbController {
     }
 
     @GetMapping("/verbs/saved")
-    public ResponseEntity<List<Verb>> getVerbs(Authentication authentication) {
+    public ResponseEntity<List<Verb>> getSavedVerbs(Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
         Optional<List<Verb>> verbs = verbService.getSavedVerbs(userId);
 
@@ -68,9 +67,9 @@ public class VerbController {
     }
 
     @DeleteMapping("/verbs")
-    public ResponseEntity<String> unsave(@Valid @RequestBody Verb verb, Authentication authentication) {
+    public ResponseEntity<String> unsaveVerb(@Valid @RequestBody Verb verb, Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
-        verbService.unsave(verb, userId);
+        verbService.unsaveVerb(verb, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

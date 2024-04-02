@@ -18,15 +18,15 @@ public class VerbService {
         this.verbRepository = verbRepository;
     }
 
-    public void save(Verb verb, BigDecimal userId) {
+    public void saveVerb(Verb verb, BigDecimal userId) {
         verbRepository.save(verb.getInfinitive(), verb.getMood(), verb.getTense(), userId);
     }
 
-    public void unsave(Verb verb, BigDecimal userId) {
+    public void unsaveVerb(Verb verb, BigDecimal userId) {
         verbRepository.unsave(verb.getInfinitive(), verb.getMood(), verb.getTense(), userId);
     }
 
-    public Optional<VerbConjugated> getConjugatedVerb(Verb verb) {
+    public Optional<VerbConjugated> getConjugationsOfVerb(Verb verb) {
         return verbRepository.findByCompositeKey(verb.getInfinitive(), verb.getMood(), verb.getTense());
     }
 
