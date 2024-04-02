@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_CLASS;
 
 @JdbcTest
-@Sql("/user-test-data.sql")
-@Sql(scripts = {"/delete-user-test-data.sql"}, executionPhase = AFTER_TEST_CLASS)
+@Sql("/test-data.sql")
+@Sql(scripts = {"/delete-test-data.sql"}, executionPhase = AFTER_TEST_CLASS)
 class JdbcUserRepositoryTest {
 
     private final JdbcTemplate jdbcTemplate;

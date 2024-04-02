@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +24,15 @@ public class JdbcVerbRepository implements VerbRepository {
 
     @Override
     public void save(String infinitive, String mood, String tense, BigDecimal userId) {
-        String sql = "INSERT INTO saved (infinitive, mood, tense, userid) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, infinitive, mood, tense, userId);
+        String checkSql = "SELECT COUNT(*) FROM saved WHERE infinitive = ? AND mood = ? AND tense = ? AND userid = ?";
+        String insertSql = "INSERT INTO saved (infinitive, mood, tense, userid) VALUES (?, ?, ?, ?)";
+
+        int result = jdbcTemplate.queryForObject(checkSql, new Object[] { infinitive, mood, tense, userId },
+                new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.INTEGER }, Integer.class);
+
+        if (result == 0) {
+            jdbcTemplate.update(insertSql, infinitive, mood, tense, userId);
+        }
     }
 
 
