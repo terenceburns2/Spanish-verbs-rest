@@ -26,8 +26,8 @@ public class VerbService {
         verbRepository.unsave(verb.getInfinitive(), verb.getMood(), verb.getTense(), userId);
     }
 
-    public Optional<VerbConjugated> getConjugatedVerb(String infinitive, String mood, String tense) {
-        return verbRepository.findByCompositeKey(infinitive, mood, tense);
+    public Optional<VerbConjugated> getConjugatedVerb(Verb verb) {
+        return verbRepository.findByCompositeKey(verb.getInfinitive(), verb.getMood(), verb.getTense());
     }
 
     public Optional<VerbConjugated> getNonSavedConjugatedVerb(BigDecimal userId) {

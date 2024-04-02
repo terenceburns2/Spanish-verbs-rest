@@ -18,6 +18,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+// In hindsight, it would have been better if I created a unique id for each verb instead of using
+// a composite key. This would have allowed me to use the id as means of targeting a specific resource within
+// a collection; verb within verbs.
+
 @RestController
 @Validated
 public class VerbController {
@@ -28,7 +32,7 @@ public class VerbController {
         this.verbService = verbService;
     }
 
-    @GetMapping("/new-conjugated-verb")
+    @GetMapping("/verbs")
     public ResponseEntity<VerbConjugated> getNonSavedConjugatedVerb(Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
         Optional<VerbConjugated> verb = verbService.getNonSavedConjugatedVerb(userId);
@@ -37,26 +41,23 @@ public class VerbController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
-    @PostMapping("/save")
+    @PostMapping("/verbs")
     public ResponseEntity<String> save(@Valid @RequestBody Verb verb, Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
         verbService.save(verb, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/conjugated-verb")
-    public ResponseEntity<VerbConjugated> getConjugatedVerb(
-            @NotBlank(message = "The infinitive is required.") @RequestParam String infinitive,
-            @NotBlank(message = "The mood is required.") @RequestParam String mood,
-            @NotBlank(message = "The tense is required.") @RequestParam String tense) {
-        Optional<VerbConjugated> verb = verbService.getConjugatedVerb(infinitive, mood, tense);
+    @GetMapping("/verbs/conjugated")
+    public ResponseEntity<VerbConjugated> getConjugatedVerb(@Valid @RequestBody Verb verb) {
+        Optional<VerbConjugated> conjugatedVerb = verbService.getConjugatedVerb(verb);
 
-        return verb.map(verbConjugated -> new ResponseEntity<>(verbConjugated, HttpStatus.OK))
+        return conjugatedVerb.map(verbConjugated -> new ResponseEntity<>(verbConjugated, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
 
     }
 
-    @GetMapping("/saved-verbs")
+    @GetMapping("/verbs/saved")
     public ResponseEntity<List<Verb>> getVerbs(Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
         Optional<List<Verb>> verbs = verbService.getSavedVerbs(userId);
@@ -66,10 +67,10 @@ public class VerbController {
 
     }
 
-    @DeleteMapping("/unsave")
-    public ResponseEntity<String> unsave(@RequestBody Verb verbDto, Authentication authentication) {
+    @DeleteMapping("/verbs")
+    public ResponseEntity<String> unsave(@Valid @RequestBody Verb verb, Authentication authentication) {
         BigDecimal userId = ((User) authentication.getPrincipal()).getId();
-        verbService.unsave(verbDto, userId);
+        verbService.unsave(verb, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
